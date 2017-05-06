@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<meta charset="UTF-8">
+<body>
+<!--画布 宽高样式-->
+<canvas id="can" width="400" height="400" style="background:Black"></canvas>
+
+<script>
+    // 方向键值 37-40 左上右下
+    //sn是蛇
+    var sn=[42,41],dz=43,fx=1,n,
+        ctx=document.getElementById("can").getContext("2d");//HTML5的内建对象  通过这个对象可以 进行画的操作
+    function draw(t,c){
+        ctx.fillStyle=c;//属性设置或返回用于填充绘画的颜色、渐变或模式 蛇的颜色
+        ctx.fillRect(t%20*20+1,~~(t/20)*20+1,18,18); //属性所指定的颜色、渐变和模式来填充指定的矩形.
+        //x,y,	矩形的左上角的坐标。width,height	矩形的大小。  黄块
+    }
+    document.onkeydown/*键盘按下*/=function(e){  //蛇走的方向
+        fx=sn[1]-sn[0]==(n=[-1,-20,1,20][(e||event).keyCode-37]||fx)?fx:n //当前所按键的键盘码 如果同时有多个键同时被按下，那就是最后所按键的键盘码
+    };
+
+
+    // 在前面加上一个布尔运算符（只多了一个感叹号），就是表达式，将执行后面的代码，也就合法实现调用
+    !function(){
+
+        //蛇走蛇停
+        sn.unshift(n=sn[0]+fx);  //在数组开始位置添加
+        if(sn.indexOf(n,1)>0 || n<0||n>399||fx==1&&n%20==0||fx==-1&&n%20==19) return alert("GAME OVER");//碰到墙结束
+        //查找某一元素的位置 返回当中某个元素第一次出现的位置
+        draw(n,"Lime");
+
+        //蛇的增加删除
+        if(n==dz){
+            while(sn.indexOf(dz=~~(Math.random()*400))>=0); //dz是黄块没这句产生不了黄块
+            draw(dz,"red");
+        }else
+            draw(sn.pop(),"Black");  //在数组末尾删除 蛇动的时候个数不变不然从开始位置一直有方块
+
+
+        setTimeout(arguments.callee,200); //arguments.callee  访问函数自身 (function(){})()
+        // 调用自己让蛇开始动
+    }();
+</script>
+</body>
+</html>
